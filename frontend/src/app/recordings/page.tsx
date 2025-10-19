@@ -45,10 +45,10 @@ export default function RecordingsPage() {
     return (
         <div className="min-h-screen bg-background">
             <div className="border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
-                <div className="max-w-4xl mx-auto px-4 py-4">
+                <div className="max-w-4xl mx-auto px-4 py-4 ">
                     <Link
                         href="/"
-                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-fit"
+                        className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors w-fit border p-2 rounded-md"
                     >
                         <ArrowLeft size={16} />
                         Back
