@@ -4,6 +4,9 @@ import "./global.css";
 export const metadata: Metadata = {
   title: "Text To Speech",
   description: "Convert text to speech",
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
