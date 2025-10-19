@@ -1,0 +1,27 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-10-11",
+	"observability": {
+		"enabled": true
+	},
+	"ai": {
+		"binding": "AI"
+	},
+	"r2_buckets": [
+		{
+			"binding": "R2",
+			"bucket_name": "aihead-r2"
+		}
+	],
+	"vars": {
+		"R2_PUBLIC_DOMAIN": "https://cdn.aihead.me/"
+	},
+	"routes": [
+		{
+			"pattern": "tts.srb.codes",
+			"custom_domain": true
+		}
+	]
+}
