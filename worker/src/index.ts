@@ -28,6 +28,9 @@ app.post("/text-to-speech", middleware, async (c) => {
 			httpMetadata: {
 				contentType: 'audio/mpeg',
 			},
+			customMetadata: {
+				text: text,
+			},
 		});
 
 		const r2_url = `${c.env.R2_PUBLIC_DOMAIN}${key}`;
