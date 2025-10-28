@@ -56,7 +56,9 @@ export default function Home() {
                 href="/recordings"
                 className="flex items-center border p-2 rounded-md gap-2 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
               >
-                View Recordings {unreadCount > 0 && `(${unreadCount})`}
+                <span className={`h-2 w-2 rounded-full ${unreadCount > 0 ? 'bg-red-500' : 'bg-white'}`} />
+                <span>View Recordings</span>
+                {unreadCount > 0 && `(${unreadCount})`}
               </Link>
             </div>
           </div>
