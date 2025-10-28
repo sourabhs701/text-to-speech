@@ -3,7 +3,6 @@
 import React from "react"
 import { cx } from "class-variance-authority"
 import { AnimatePresence, motion } from "motion/react"
-
 import { Button } from "@/components/ui/button"
 import SiriOrb from "./SiriOrb"
 import { useClickOutside } from "@/hooks/use-click-outside"
@@ -15,6 +14,7 @@ interface FooterContext {
   showFeedback: boolean
   success: boolean
   isLoading: boolean
+  customOrb?: React.ReactNode
   openFeedback: () => void
   closeFeedback: () => void
   onSend: (text: string) => void
@@ -26,9 +26,10 @@ const useFooter = () => React.useContext(FooterContext)
 interface MorphSurfaceProps {
   onSend: (text: string) => void
   isLoading: boolean
+  customOrb?: React.ReactNode
 }
 
-export function MorphSurface({ onSend, isLoading }: MorphSurfaceProps) {
+export function MorphSurface({ onSend, isLoading, customOrb }: MorphSurfaceProps) {
   const rootRef = React.useRef<HTMLDivElement>(null)
 
   const feedbackRef = React.useRef<HTMLTextAreaElement | null>(null)
@@ -63,11 +64,12 @@ export function MorphSurface({ onSend, isLoading }: MorphSurfaceProps) {
       showFeedback,
       success,
       isLoading,
+      customOrb,
       openFeedback,
       closeFeedback,
       onSend,
     }),
-    [showFeedback, success, isLoading, openFeedback, closeFeedback, onSend]
+    [showFeedback, success, isLoading, customOrb, openFeedback, closeFeedback, onSend]
   )
 
   return (
@@ -108,11 +110,28 @@ export function MorphSurface({ onSend, isLoading }: MorphSurfaceProps) {
 }
 
 function Dock() {
-  const { showFeedback, openFeedback, isLoading } = useFooter()
+  const { showFeedback, openFeedback, isLoading, customOrb } = useFooter()
+  const defaultOrb = (
+    <motion.div
+      key="siri-orb"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+    >
+      <SiriOrb
+        size="32px"
+        colors={{
+          bg: "oklch(22.64% 0 0)",
+        }}
+      />
+    </motion.div>
+  )
+
   return (
     <footer className="mt-auto flex h-[44px] items-center justify-center whitespace-nowrap select-none">
       <div className="flex items-center justify-center gap-2 px-3 max-sm:h-10 max-sm:px-2">
-        <div className="flex w-fit items-center gap-2">
+        <div className="flex w-fit items-center gap-2 h-8">
           <AnimatePresence mode="wait">
             {showFeedback ? (
               <motion.div
@@ -120,23 +139,12 @@ function Dock() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0 }}
                 exit={{ opacity: 0 }}
-                className="h-6 w-6"
+                className="h-8 w-8"
               />
             ) : (
-              <motion.div
-                key="siri-orb"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <SiriOrb
-                  size="24px"
-                  colors={{
-                    bg: "oklch(22.64% 0 0)",
-                  }}
-                />
-              </motion.div>
+              <div className="h-8 w-8 flex items-center justify-center">
+                {customOrb || defaultOrb}
+              </div>
             )}
           </AnimatePresence>
         </div>
@@ -154,7 +162,7 @@ function Dock() {
                 <span className="text-sm font-medium">Generating...</span>
               </div>
             ) : (
-              <span className="truncate font-medium text-sm">Text to Speech</span>
+              <span className="truncate font-medium text-sm ">Text to Speech</span>
             )}
           </div>
         </Button>
@@ -173,7 +181,7 @@ function Feedback({
   ref: React.Ref<HTMLTextAreaElement>
   onSuccess: () => void
 }) {
-  const { closeFeedback, showFeedback, isLoading, onSend } = useFooter()
+  const { closeFeedback, showFeedback, isLoading, onSend, customOrb } = useFooter()
   const submitRef = React.useRef<HTMLButtonElement>(null)
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -225,7 +233,7 @@ function Feedback({
             className="flex h-full flex-col p-1"
           >
             <div className="flex justify-between py-1">
-              <p className="text-foreground z-2 ml-[38px] flex items-center gap-[6px] select-none text-sm font-medium">
+              <p className="text-foreground z-2 ml-[42px] flex items-center gap-[6px] select-none text-sm font-medium">
                 Text to Speech
               </p>
               <button
@@ -258,14 +266,16 @@ function Feedback({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-2 left-3"
+            className="absolute top-2 left-3 h-8 w-8 flex items-center justify-center"
           >
-            <SiriOrb
-              size="24px"
-              colors={{
-                bg: "oklch(22.64% 0 0)",
-              }}
-            />
+            {customOrb || (
+              <SiriOrb
+                size="24px"
+                colors={{
+                  bg: "oklch(22.64% 0 0)",
+                }}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
